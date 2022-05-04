@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LuaVersionInfo.h"
 #include "Modules/ModuleManager.h"
 #include "UObject/GCObject.h"
 #include "LuaState.h"

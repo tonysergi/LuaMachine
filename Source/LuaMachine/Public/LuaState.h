@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LuaVersionInfo.h"
 #include "Engine/Blueprint.h"
 #include "ThirdParty/lua/lua.hpp"
 #include "LuaValue.h"
 #include "LuaCode.h"
 #include "Runtime/Core/Public/Containers/Queue.h"
-#include "Runtime/Launch/Resources/Version.h"
 #include "LuaDelegate.h"
 #include "LuaCommandExecutor.h"
 #include "LuaState.generated.h"
@@ -361,19 +361,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Lua")
 	static TArray<uint8> ToByteCode(const FString& Code, const FString& CodePath, FString& ErrorString);
 
-#if ENGINE_MAJOR_VERSION > 4 || ENGINE_MINOR_VERSION >= 25
-	FLuaValue FromUProperty(void* Buffer, FProperty* Property, bool& bSuccess, int32 Index = 0);
-	void ToUProperty(void* Buffer, FProperty* Property, FLuaValue Value, bool& bSuccess, int32 Index = 0);
 	FLuaValue FromFProperty(void* Buffer, FProperty* Property, bool& bSuccess, int32 Index = 0);
 	void ToFProperty(void* Buffer, FProperty* Property, FLuaValue Value, bool& bSuccess, int32 Index = 0);
 	FLuaValue FromProperty(void* Buffer, FProperty* Property, bool& bSuccess, int32 Index = 0);
 	void ToProperty(void* Buffer, FProperty* Property, FLuaValue Value, bool& bSuccess, int32 Index = 0);
-#else
-	FLuaValue FromUProperty(void* Buffer, UProperty* Property, bool& bSuccess, int32 Index = 0);
-	void ToUProperty(void* Buffer, UProperty* Property, FLuaValue Value, bool& bSuccess, int32 Index = 0);
-	FLuaValue FromProperty(void* Buffer, UProperty* Property, bool& bSuccess, int32 Index = 0);
-	void ToProperty(void* Buffer, UProperty* Property, FLuaValue Value, bool& bSuccess, int32 Index = 0);
-#endif
 
 	static ULuaState* GetFromExtraSpace(lua_State* L)
 	{

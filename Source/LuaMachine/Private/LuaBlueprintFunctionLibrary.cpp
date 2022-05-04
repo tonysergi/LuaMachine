@@ -341,7 +341,7 @@ FString ULuaBlueprintFunctionLibrary::LuaValueToUTF8(const FLuaValue& Value)
 
 FLuaValue ULuaBlueprintFunctionLibrary::LuaValueFromUTF32(const FString& String)
 {
-#if ENGINE_MINOR_VERSION >= 25
+#if LUA_ENGINE_VERSION >= 425
 	FTCHARToUTF32 UTF32String(*String);
 	return FLuaValue((const char*)UTF32String.Get(), UTF32String.Length());
 #else
@@ -352,7 +352,7 @@ FLuaValue ULuaBlueprintFunctionLibrary::LuaValueFromUTF32(const FString& String)
 
 FString ULuaBlueprintFunctionLibrary::LuaValueToUTF32(const FLuaValue& Value)
 {
-#if ENGINE_MINOR_VERSION >= 25
+#if LUA_ENGINE_VERSION >= 425
 	FString ReturnValue;
 	TArray<uint8> Bytes = Value.ToBytes();
 	Bytes.Add(0);
@@ -534,7 +534,7 @@ UTexture2D* ULuaBlueprintFunctionLibrary::LuaValueToTransientTexture(int32 Width
 			return nullptr;
 		}
 
-#if ENGINE_MAJOR_VERSION > 4 || ENGINE_MINOR_VERSION >= 25
+#if LUA_ENGINE_VERSION >= 425
 		TArray<uint8> UncompressedBytes;
 #else
 		const TArray<uint8>* UncompressedBytes = nullptr;
@@ -547,7 +547,7 @@ UTexture2D* ULuaBlueprintFunctionLibrary::LuaValueToTransientTexture(int32 Width
 		PixelFormat = EPixelFormat::PF_B8G8R8A8;
 		Width = ImageWrapper->GetWidth();
 		Height = ImageWrapper->GetHeight();
-#if ENGINE_MAJOR_VERSION > 4 || ENGINE_MINOR_VERSION >= 25
+#if LUA_ENGINE_VERSION >= 425
 		Bytes = UncompressedBytes;
 #else
 		Bytes = *UncompressedBytes;
@@ -560,7 +560,7 @@ UTexture2D* ULuaBlueprintFunctionLibrary::LuaValueToTransientTexture(int32 Width
 		return nullptr;
 	}
 
-#if ENGINE_MAJOR_VERSION > 4
+#if LUA_ENGINE_VERSION >= 500
 	FTexture2DMipMap& Mip = Texture->GetPlatformData()->Mips[0];
 #else
 	FTexture2DMipMap& Mip = Texture->PlatformData->Mips[0];
@@ -610,7 +610,7 @@ void ULuaBlueprintFunctionLibrary::LuaHttpRequest(UObject* WorldContextObject, T
 	if (!L)
 		return;
 
-#if ENGINE_MAJOR_VERSION > 4 || ENGINE_MINOR_VERSION >= 26
+#if LUA_ENGINE_VERSION >= 426
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> HttpRequest = FHttpModule::Get().CreateRequest();
 #else
 	TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
@@ -679,7 +679,7 @@ void ULuaBlueprintFunctionLibrary::LuaRunURL(UObject* WorldContextObject, TSubcl
 			return;
 		}
 	}
-#if ENGINE_MAJOR_VERSION > 4 || ENGINE_MINOR_VERSION >= 26
+#if LUA_ENGINE_VERSION >= 426
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> HttpRequest = FHttpModule::Get().CreateRequest();
 #else
 	TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
@@ -953,7 +953,7 @@ FLuaValue ULuaBlueprintFunctionLibrary::GetLuaComponentByStateAsLuaValue(AActor*
 {
 	if (!Actor)
 		return FLuaValue();
-#if ENGINE_MAJOR_VERSION < 5 && ENGINE_MINOR_VERSION < 24
+#if LUA_ENGINE_VERSION < 424
 	TArray<UActorComponent*> Components = Actor->GetComponentsByClass(ULuaComponent::StaticClass());
 #else
 	TArray<UActorComponent*> Components;
@@ -979,7 +979,7 @@ FLuaValue ULuaBlueprintFunctionLibrary::GetLuaComponentByNameAsLuaValue(AActor* 
 	if (!Actor)
 		return FLuaValue();
 
-#if ENGINE_MAJOR_VERSION < 5 && ENGINE_MINOR_VERSION < 24
+#if LUA_ENGINE_VERSION < 424
 	TArray<UActorComponent*> Components = Actor->GetComponentsByClass(ULuaComponent::StaticClass());
 #else
 	TArray<UActorComponent*> Components;
@@ -1005,7 +1005,7 @@ FLuaValue ULuaBlueprintFunctionLibrary::GetLuaComponentByStateAndNameAsLuaValue(
 	if (!Actor)
 		return FLuaValue();
 
-#if ENGINE_MAJOR_VERSION < 5 && ENGINE_MINOR_VERSION < 24
+#if LUA_ENGINE_VERSION < 424
 	TArray<UActorComponent*> Components = Actor->GetComponentsByClass(ULuaComponent::StaticClass());
 #else
 	TArray<UActorComponent*> Components;
@@ -1824,7 +1824,7 @@ bool ULuaBlueprintFunctionLibrary::LuaLoadPakFile(const FString& Filename, FStri
 		bCustomPakPlatformFile = true;
 	}
 
-#if	ENGINE_MAJOR_VERSION > 4 || ENGINE_MINOR_VERSION > 26
+#if LUA_ENGINE_VERSION > 426
 	TRefCountPtr<FPakFile> PakFile = new FPakFile(PakPlatformFile, *Filename, false);
 #else
 	FPakFile PakFile(PakPlatformFile, *Filename, false);
@@ -1840,7 +1840,7 @@ bool ULuaBlueprintFunctionLibrary::LuaLoadPakFile(const FString& Filename, FStri
 		return false;
 	}
 
-#if	ENGINE_MAJOR_VERSION > 4 || ENGINE_MINOR_VERSION > 26
+#if LUA_ENGINE_VERSION > 426
 	FString PakFileMountPoint = PakFile->GetMountPoint();
 #else
 	FString PakFileMountPoint = PakFile.GetMountPoint();
@@ -1850,7 +1850,7 @@ bool ULuaBlueprintFunctionLibrary::LuaLoadPakFile(const FString& Filename, FStri
 
 	FPaths::MakeStandardFilename(PakFileMountPoint);
 
-#if	ENGINE_MAJOR_VERSION > 4 || ENGINE_MINOR_VERSION > 26
+#if LUA_ENGINE_VERSION > 426
 	PakFile->SetMountPoint(*PakFileMountPoint);
 #else
 	PakFile.SetMountPoint(*PakFileMountPoint);
@@ -1880,7 +1880,7 @@ bool ULuaBlueprintFunctionLibrary::LuaLoadPakFile(const FString& Filename, FStri
 	IAssetRegistry& AssetRegistry = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry")).Get();
 
 #if WITH_EDITOR
-#if ENGINE_MAJOR_VERSION > 4 || ENGINE_MINOR_VERSION > 23
+#if LUA_ENGINE_VERSION > 423
 	int32 bPreviousGAllowUnversionedContentInEditor = GAllowUnversionedContentInEditor;
 #else
 	bool bPreviousGAllowUnversionedContentInEditor = GAllowUnversionedContentInEditor;

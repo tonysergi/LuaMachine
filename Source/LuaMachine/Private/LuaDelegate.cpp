@@ -23,15 +23,9 @@ void ULuaDelegate::ProcessEvent(UFunction* Function, void* Parms)
 	}
 
 	TArray<FLuaValue> LuaArgs;
-#if  ENGINE_MAJOR_VERSION > 4 ||ENGINE_MINOR_VERSION >= 25
 	for (TFieldIterator<FProperty> It(LuaDelegateSignature); (It && (It->PropertyFlags & (CPF_Parm | CPF_ReturnParm)) == CPF_Parm); ++It)
 	{
 		FProperty* Prop = *It;
-#else
-	for (TFieldIterator<UProperty> It(LuaDelegateSignature); (It && (It->PropertyFlags & (CPF_Parm | CPF_ReturnParm)) == CPF_Parm); ++It)
-	{
-		UProperty* Prop = *It;
-#endif
 		bool bPropSuccess = false;
 		LuaArgs.Add(LuaState->FromProperty(Parms, Prop, bPropSuccess, 0));
 	}

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LuaVersionInfo.h"
 #include "UObject/NoExportTypes.h"
 #include "LuaState.h"
 #include "LuaUserDataObject.generated.h"

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LuaVersionInfo.h"
 #include "Engine/DataAsset.h"
 #include "LuaState.h"
 #include "LuaValue.h"
